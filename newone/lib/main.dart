@@ -1,10 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:newone/dashboard.dart';
+import 'package:newone/firebase_options.dart';
 import 'package:newone/flashcard.dart';
 import 'package:newone/login.dart';
 import 'package:newone/onboardingscreen.dart';
-import 'package:newone/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
