@@ -49,7 +49,9 @@ class HomeDashboard extends StatelessWidget {
 
               // 🧠 Flashcards Button
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, '/flashcards');
+                },
                 child: Container(
                   padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
