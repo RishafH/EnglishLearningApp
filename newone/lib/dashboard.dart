@@ -1,84 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeDashboard extends StatelessWidget {
-  final String userName = "Rishaf"; // You can get this from user data
-  final double progress = 0.4; // 40% complete
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF9FAFB),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 👋 Welcome Text
-              Text(
-                "Hi $userName 👋",
-                style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(height: 8),
-              Text(
-                "Let's learn something new today!",
-                style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[700]),
-              ),
-              SizedBox(height: 30),
+        child: StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance.collection('users').doc(userId).snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            }
 
-              // 📊 Progress Bar
-              Text("Today's Progress", style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500)),
-              SizedBox(height: 10),
-              LinearProgressIndicator(
-                value: progress,
-                minHeight: 12,
-                backgroundColor: Colors.grey[300],
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.teal),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              SizedBox(height: 30),
+            final data = snapshot.data!.data() as Map<String, dynamic>;
+            final String userName = data['name'] ?? 'User';
+            final double progress = (data['progress'] ?? 0.0).toDouble();
 
-              // 📅 Today's Plan
-              Text("Today's Plan", style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600)),
-              SizedBox(height: 10),
-              _taskCard("🗣️ Speaking Practice", "10 minutes conversation"),
-              _taskCard("📖 Vocabulary Quiz", "10 new words today"),
-              _taskCard("✍️ Writing Task", "Write 1 short paragraph"),
-              SizedBox(height: 30),
+            return SingleChildScrollView(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Hi $userName 👋", style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.w600)),
+                  SizedBox(height: 8),
+                  Text("Let's learn something new today!",
+                      style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[700])),
+                  SizedBox(height: 30),
 
-              // 🧠 Flashcards Button
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/flashcards');
-                },
-                child: Container(
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.teal[100],
-                    borderRadius: BorderRadius.circular(16),
+                  Text("Today's Progress",
+                      style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 10),
+                  LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 12,
+                    backgroundColor: Colors.grey[300],
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.teal),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  SizedBox(height: 30),
+
+                  Text("Today's Plan",
+                      style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600)),
+                  SizedBox(height: 10),
+                  _taskCard("🗣️ Speaking Practice", "10 minutes conversation"),
+                  _taskCard("📖 Vocabulary Quiz", "10 new words today"),
+                  _taskCard("✍️ Writing Task", "Write 1 short paragraph"),
+                  SizedBox(height: 30),
+
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/flashcards');
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.teal[100],
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("🧠 Learn with Flashcards", style: GoogleFonts.poppins(fontSize: 16)),
+                          Icon(Icons.arrow_forward_ios, color: Colors.teal)
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+
+                  Row(
                     children: [
-                      Text("🧠 Learn with Flashcards", style: GoogleFonts.poppins(fontSize: 16)),
-                      Icon(Icons.arrow_forward_ios, color: Colors.teal)
+                      _miniCard("🔥 3-day streak", Colors.orange[100]!),
+                      SizedBox(width: 16),
+                      _miniCard("💡 Tip: Read out loud", Colors.yellow[100]!),
                     ],
                   ),
-                ),
-              ),
-              SizedBox(height: 30),
-
-              // 🏆 Streak & Tip
-              Row(
-                children: [
-                  _miniCard("🔥 3-day streak", Colors.orange[100]!),
-                  SizedBox(width: 16),
-                  _miniCard("💡 Tip: Read out loud", Colors.yellow[100]!),
                 ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

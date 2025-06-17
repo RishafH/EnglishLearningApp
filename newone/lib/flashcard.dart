@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flip_card/flutter_flip_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FlashcardScreen extends StatefulWidget {
   @override
@@ -8,20 +10,46 @@ class FlashcardScreen extends StatefulWidget {
 
 class _FlashcardScreenState extends State<FlashcardScreen> {
   int currentIndex = 0;
+  final FlipCardController controller = FlipCardController();
 
-  // Sample flashcard data
+  // ✅ Sample flashcard data
   final List<Map<String, String>> flashcards = [
     {'word': 'Apple', 'meaning': 'A red or green fruit 🍎'},
     {'word': 'Run', 'meaning': 'To move fast on foot 🏃‍♂️'},
     {'word': 'Beautiful', 'meaning': 'Very pleasing to the eyes 🌸'},
   ];
 
-  final FlipCardController controller = FlipCardController();
+  // ✅ Next button logic
+  void nextCard() async {
+    if (currentIndex < flashcards.length - 1) {
+      setState(() {
+        currentIndex++;
+      });
+    } else {
+      // ✅ All cards viewed: update progress in Firestore
+      await _updateProgress(0.3); // Increment by 30%
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("🎉 Well done! Progress updated.")),
+      );
 
-  void nextCard() {
-    setState(() {
-      currentIndex = (currentIndex + 1) % flashcards.length;
-    });
+      // Restart or close
+      setState(() {
+        currentIndex = 0;
+      });
+    }
+  }
+
+  // ✅ Firestore progress update function
+  Future<void> _updateProgress(double valueToAdd) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(uid);
+    final snapshot = await userDoc.get();
+    final current = (snapshot.data()?['progress'] ?? 0.0).toDouble();
+    final updated = (current + valueToAdd).clamp(0.0, 1.0);
+
+    await userDoc.update({'progress': updated});
   }
 
   @override
@@ -39,8 +67,6 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
         child: Column(
           children: [
             SizedBox(height: 40),
-
-            // 📇 Flip Card
             Expanded(
               child: FlipCard(
                 controller: controller,
@@ -49,12 +75,10 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
                 backWidget: _cardFace(card['meaning']!, isFront: false),
               ),
             ),
-
             SizedBox(height: 30),
-
             ElevatedButton(
               onPressed: nextCard,
-              child: Text("Next"),
+              child: Text(currentIndex == flashcards.length - 1 ? "Finish" : "Next"),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.teal,
                 minimumSize: Size(double.infinity, 50),
@@ -66,6 +90,7 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
     );
   }
 
+  // 📇 Card UI
   Widget _cardFace(String text, {required bool isFront}) {
     return Container(
       width: double.infinity,
