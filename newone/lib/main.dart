@@ -18,6 +18,8 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   Future<bool> checkOnboardingSeen() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('seenOnboarding') ?? false;
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
         future: checkOnboardingSeen(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return SizedBox(); // or splash
+            return const SizedBox(); // or splash
           }
           return snapshot.data! ? LoginScreen() : OnboardingScreen();
         },
