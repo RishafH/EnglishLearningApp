@@ -275,7 +275,7 @@ class HomeDashboard extends StatelessWidget {
             "10-minute conversation",
             Icons.mic,
             () => Navigator.push(context, MaterialPageRoute(builder: (context) => SpeakingPracticePage())),
-            "Speaking Practice tapped!",
+            "",
           ),
         ),
         FadeInUp(
@@ -314,7 +314,6 @@ class HomeDashboard extends StatelessWidget {
       ],
     );
   }
-
   Widget _taskCard(
     BuildContext context,
     String title,
@@ -324,12 +323,7 @@ class HomeDashboard extends StatelessWidget {
     String snackBarMessage,
   ) {
     return GestureDetector(
-      onTap: () {
-        onTap();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(snackBarMessage)),
-        );
-      },
+      onTap: onTap,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
         padding: const EdgeInsets.all(16),
@@ -388,6 +382,7 @@ class HomeDashboard extends StatelessWidget {
       ),
     );
   }
+  }
 
   Widget _miniCard(String text, Color bgColor, IconData icon) {
     return Expanded(
@@ -425,7 +420,7 @@ class HomeDashboard extends StatelessWidget {
       ),
     );
   }
-}
+
 
 class WavePainter extends CustomPainter {
   @override
