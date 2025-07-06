@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:newone/dailytips.dart';
 import 'package:newone/flashcard.dart';
 import 'package:newone/speakingpractice.dart';
 import 'package:newone/vocabulary.dart';
@@ -69,9 +70,27 @@ class HomeDashboard extends StatelessWidget {
                       FadeInUp(
                         child: Row(
                           children: [
-                            _miniCard("🔥 $streakDays-day Streak", Colors.orange[200]!, Icons.local_fire_department),
+                            _miniCard("🔥 $streakDays-day Streak", Colors.orange[200]!, Icons.local_fire_department,
+                              onTap: () {
+                               Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const DailyTipPage(),
+                                  ),
+                                );
+                              },
+                            ),
                             const SizedBox(width: 16),
-                            _miniCard("💡 Daily Tip: Speak confidently!", Colors.yellow[200]!, Icons.lightbulb),
+                            _miniCard("💡 Daily Tip: Speak confidently!", Colors.yellow[200]!, Icons.lightbulb,
+                             onTap: () {
+                               Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const DailyTipPage(),
+                                  ),
+                                );
+                              },),
+                            
                           ],
                         ),
                       ),
@@ -384,38 +403,41 @@ class HomeDashboard extends StatelessWidget {
   }
   }
 
-  Widget _miniCard(String text, Color bgColor, IconData icon) {
+  Widget _miniCard(String text, Color bgColor, IconData icon, {VoidCallback? onTap}) {
     return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(
-              blurRadius: 6,
-              color: Colors.black12,
-              offset: Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: Colors.teal[800], size: 20),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                text,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.teal[800],
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: const [
+              BoxShadow(
+                blurRadius: 6,
+                color: Colors.black12,
+                offset: Offset(0, 3),
               ),
-            ),
-          ],
+            ],
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: Colors.teal[800], size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  text,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.teal[800],
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

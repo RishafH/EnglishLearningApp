@@ -107,8 +107,39 @@ class _VocabularyQuizPageState extends State<VocabularyQuizPage> {
   Widget build(BuildContext context) {
     if (loading) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Vocabulary Quiz')),
-        body: const Center(child: CircularProgressIndicator()),
+        appBar: AppBar(
+          title: const Text('Vocabulary Quiz'),
+          backgroundColor: Colors.teal[300],
+        ),
+        body: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(24),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color.fromARGB(255, 234, 253, 227), Color.fromARGB(255, 237, 255, 225)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/reading.gif', 
+                height: 200,
+              ),
+              const SizedBox(height: 30),
+              const Text(
+                'Loading your quiz...',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.teal,
+                ),
+              ),
+            ],
+          ),
+        ),
       );
     }
 
@@ -131,7 +162,7 @@ class _VocabularyQuizPageState extends State<VocabularyQuizPage> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFFDF6E3), Color(0xFFFFF8E1)],
+            colors: [Color.fromARGB(255, 234, 253, 227), Color.fromARGB(255, 237, 255, 225)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
