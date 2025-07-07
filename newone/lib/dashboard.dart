@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:newone/dailytips.dart';
 import 'package:newone/flashcard.dart';
 import 'package:newone/speakingpractice.dart';
+import 'package:newone/task_planner_page.dart';
 import 'package:newone/vocabulary.dart';
 import 'package:newone/writingtask.dart';
 import 'package:animate_do/animate_do.dart';
@@ -19,6 +20,22 @@ class HomeDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF0F4F8),
+       floatingActionButton: ElasticIn(
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TaskPlannerPage()),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Navigating to Task Management")),
+            );
+          },
+          backgroundColor: Colors.teal[600],
+          child: const Icon(Icons.task, color: Colors.white),
+          tooltip: 'Manage Tasks',
+        ),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -142,7 +159,7 @@ class HomeDashboard extends StatelessWidget {
                 maxLines: 1,
               ),
               Text(
-                "Ready to master English?",
+                "Ready to mass English?",
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.white70,
