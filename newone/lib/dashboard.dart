@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:newone/dailytips.dart';
 import 'package:newone/flashcard.dart';
+import 'package:newone/motivational_vedio.dart';
 import 'package:newone/speakingpractice.dart';
 import 'package:newone/task_planner_page.dart';
 import 'package:newone/vocabulary.dart';
@@ -92,7 +93,7 @@ class HomeDashboard extends StatelessWidget {
                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const DailyTipPage(),
+                                    builder: (context) => const MotivationalVideosPage(),
                                   ),
                                 );
                               },
