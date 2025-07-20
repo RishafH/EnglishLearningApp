@@ -75,7 +75,23 @@ class _DailyTipPageState extends State<DailyTipPage>
         backgroundColor: Colors.teal,
       ),
       backgroundColor: const Color(0xFFF0F4F8),
-      body: loading
+      body:
+      Stack(
+  children: [
+    // 🌄 Background Image
+    Positioned.fill(
+      child: Image.asset(
+        'assets/back.jpg',
+        fit: BoxFit.cover,
+      ),
+    ),
+
+    // 🧼 Semi-transparent overlay
+    Positioned.fill(
+      child: Container(
+        color: Colors.white.withOpacity(0.85),
+      ),
+    ), loading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Padding(
@@ -171,7 +187,7 @@ class _DailyTipPageState extends State<DailyTipPage>
                   ],
                 ),
               ),
-            ),
+            ),],)
     );
   }
 
